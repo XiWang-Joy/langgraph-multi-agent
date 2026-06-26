@@ -1,9 +1,8 @@
-#from langchain_community.chat_models import BedrockChat
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.runnables.base import RunnableParallel
+from nodes.llm import llm_haiku, llm_sonnet, llm_opus
 
 
 # Define data models
@@ -14,11 +13,6 @@ class RevisedPlan(BaseModel):
 class RevisedTask(BaseModel):
     """Use this tool to describe the task after updates from the user"""
     task: str = Field(description="The revised task after making changes requested by the user.  If there are no changes to the task, this will be the same as the original task")
-
-# define language models
-llm_haiku = ChatAnthropic(model='claude-3-haiku-20240307', temperature=0)
-llm_sonnet = ChatAnthropic(model='claude-3-sonnet-20240229', temperature=0)
-llm_opus = ChatAnthropic(model='claude-3-opus-20240229', temperature=0)
 
 llm_revise = llm_opus
 llm_formatted_plan = llm_haiku.bind_tools([RevisedPlan])

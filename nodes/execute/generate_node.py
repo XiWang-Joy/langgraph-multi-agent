@@ -1,16 +1,7 @@
-#from langchain_community.chat_models import BedrockChat
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.pydantic_v1 import BaseModel, Field
-
-
-opus_model_id = 'claude-3-opus-20240229'
-sonnet_model_id = 'claude-3-sonnet-20240229'
-haiku_model_id = 'claude-3-haiku-20240307'
-
-llm_opus = ChatAnthropic(model=opus_model_id, temperature=0)
-llm_sonnet = ChatAnthropic(model=sonnet_model_id, temperature=0)
+from nodes.llm import llm_opus, llm_sonnet
 
 # define tools
 class PythonREPL(BaseModel):

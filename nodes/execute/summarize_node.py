@@ -2,19 +2,15 @@
 from typing import List
 
 # langchain libraries
-from langchain_anthropic import ChatAnthropic
-#from langchain_community.chat_models import BedrockChat
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
+from nodes.llm import llm_haiku
 
 # Define data models
 class Result(BaseModel):
     """A succinct answer to the user's request"""
     result: str = Field(description="A succinct answer to the user's request")
-
-# define language models
-llm_haiku = ChatAnthropic(model='claude-3-haiku-20240307', temperature=0)
 
 llm_summarize = llm_haiku.bind_tools([Result])
 

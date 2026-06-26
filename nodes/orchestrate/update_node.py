@@ -3,11 +3,10 @@ from dotenv import load_dotenv, find_dotenv
 import json
 
 # langchain libraries
-from langchain_anthropic import ChatAnthropic
-#from langchain_community.chat_models import BedrockChat
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
+from nodes.llm import llm_opus
 
 with open('state/functions.json', 'r') as file:
     library_dict = json.load(file)
@@ -16,11 +15,6 @@ with open('state/functions.json', 'r') as file:
 class UpdatedPlan(BaseModel):
     """Use this tool to describe the plan created to solve a user's task.  You must always use this tool to describe the plan."""
     plan: str = Field(description="The updated plan after making any updates necessary to ensure the correct attributes are passed to each of the pybasell functions.")
-
-# define language models
-#llm_haiku = ChatAnthropic(model='claude-3-haiku-20240307', temperature=0)
-#llm_sonnet = ChatAnthropic(model='claude-3-sonnet-20240229', temperature=0)
-llm_opus = ChatAnthropic(model='claude-3-opus-20240229', temperature=0)
 
 llm_update = llm_opus.bind_tools([UpdatedPlan])
 

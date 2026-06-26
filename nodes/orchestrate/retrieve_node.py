@@ -3,8 +3,6 @@ import pandas as pd
 from typing import List
 
 # langchain libraries
-from langchain_anthropic import ChatAnthropic
-from langchain_community.chat_models import BedrockChat
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field

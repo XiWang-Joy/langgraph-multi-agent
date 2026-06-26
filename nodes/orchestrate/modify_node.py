@@ -2,21 +2,15 @@
 from typing import List
 
 # langchain libraries
-from langchain_anthropic import ChatAnthropic
-#from langchain_community.chat_models import BedrockChat
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
+from nodes.llm import llm_haiku, llm_sonnet, llm_opus
     
 # Define data models
 class ModifiedPlan(BaseModel):
     """Use this tool to modify a plan based on feedback from the user"""
     plan: str = Field(description="The modified plan after making changes requested by the user.")
-
-# define language models
-llm_haiku = ChatAnthropic(model='claude-3-haiku-20240307', temperature=0)
-llm_sonnet = ChatAnthropic(model='claude-3-sonnet-20240229', temperature=0)
-llm_opus = ChatAnthropic(model='claude-3-opus-20240229', temperature=0)
 
 llm_modify = llm_sonnet
 llm_format = llm_haiku.bind_tools([ModifiedPlan])

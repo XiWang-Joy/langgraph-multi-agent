@@ -1,12 +1,6 @@
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_community.chat_models import BedrockChat
-
-
-# define language model
-#model_id = 'anthropic.claude-3-sonnet-20240229-v1:0'
-model_id = 'anthropic.claude-3-haiku-20240307-v1:0'
-llm = BedrockChat(model_id=model_id, model_kwargs={'temperature': 0})
+from nodes.llm import llm_haiku as llm
 
 POS_FEEDBACK_SYSTEM_PROMPT = '''
 If the user's message can be understood as positive affirmation with no additional information or clarifications, respond Y.

@@ -4,8 +4,10 @@ ipywidgets==8.1.1
 langchain==0.1.16
 langchain-anthropic==0.1.8
 langchain-experimental==0.0.57
+langchain-openai==0.1.7
 langgraph==0.0.34
+langsmith==0.1.147
 pybaseball==2.2.7
 pydantic==1.10.13
 python-dotenv==1.0.0
-sentence-transformers==2.2.2
+sentence-transformers>=2.7.0
