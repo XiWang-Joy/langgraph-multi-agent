@@ -2,6 +2,7 @@
 import json
 
 # langchain libraries
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.runnables.base import RunnableParallel
@@ -27,8 +28,8 @@ class PybaseballLibraries(BaseModel):
     libraries: str = Field(description=f"A comma-separated list of pybaseball libraries that are used in the plan.  You may only include libraries from this list: {libraries_lst}.")
 
 llm_initial_plan = llm_opus
-llm_formatted_plan = llm_haiku.bind_tools([FormattedPlan])
-llm_libraries = llm_sonnet.bind_tools([PybaseballLibraries])
+llm_formatted_plan = llm_haiku.bind_tools([FormattedPlan], tool_choice='FormattedPlan')
+llm_libraries = llm_sonnet.bind_tools([PybaseballLibraries], tool_choice='PybaseballLibraries')
 
 def collect_library_helpers(libraries):
     '''
@@ -119,7 +120,10 @@ def formulate_initial_plan(task, existing_plan, similar_task, langchain_config):
     parallel_formatting_chain = RunnableParallel(plan=plan_chain, libraries=libraries_chain)
 
     # combine all into a single chain
-    initial_plan_chain = initial_prompt | llm_initial_plan | parallel_formatting_chain
+    # StrOutputParser converts the plan AIMessage to clean text before the
+    # formatting branches — otherwise the prompt's {plan} var receives the
+    # stringified message object, which less-robust models mis-handle.
+    initial_plan_chain = initial_prompt | llm_initial_plan | StrOutputParser() | parallel_formatting_chain
 
     result = initial_plan_chain.invoke({'task':task, 'existing_plan':existing_plan, 'similar_task':similar_task, 'libraries_string': libraries_string}, config=langchain_config)
 

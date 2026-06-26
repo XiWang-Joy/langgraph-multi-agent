@@ -1,4 +1,5 @@
 from langchain_core.messages import AIMessage
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.runnables.base import RunnableParallel
@@ -15,8 +16,8 @@ class RevisedTask(BaseModel):
     task: str = Field(description="The revised task after making changes requested by the user.  If there are no changes to the task, this will be the same as the original task")
 
 llm_revise = llm_opus
-llm_formatted_plan = llm_haiku.bind_tools([RevisedPlan])
-llm_formatted_task = llm_haiku.bind_tools([RevisedTask])
+llm_formatted_plan = llm_haiku.bind_tools([RevisedPlan], tool_choice='RevisedPlan')
+llm_formatted_task = llm_haiku.bind_tools([RevisedTask], tool_choice='RevisedTask')
 
 REVISE_SYSTEM_PROMPT = '''
 <instructions>You are world class Data Analyst and an expert on baseball and analyzing data through the pybaseball Python library.  
@@ -63,7 +64,7 @@ task_prompt = ChatPromptTemplate.from_messages([
 ])
 
 # create individual chain to revise the plan and the task
-plan_chain = revise_prompt_template | llm_revise | format_prompt | llm_formatted_plan
+plan_chain = revise_prompt_template | llm_revise | StrOutputParser() | format_prompt | llm_formatted_plan
 task_chain = task_prompt | llm_formatted_task
 
 # combine into a parallel chain

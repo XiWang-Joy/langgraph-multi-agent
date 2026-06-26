@@ -12,7 +12,7 @@ class Result(BaseModel):
     """A succinct answer to the user's request"""
     result: str = Field(description="A succinct answer to the user's request")
 
-llm_summarize = llm_haiku.bind_tools([Result])
+llm_summarize = llm_haiku.bind_tools([Result], tool_choice='Result')
 
 
 SUMMARIZE_SYSTEM_PROMPT = '''

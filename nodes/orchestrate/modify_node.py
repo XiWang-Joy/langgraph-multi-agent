@@ -3,6 +3,7 @@ from typing import List
 
 # langchain libraries
 from langchain_core.messages import AIMessage
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from nodes.llm import llm_haiku, llm_sonnet, llm_opus
@@ -13,7 +14,7 @@ class ModifiedPlan(BaseModel):
     plan: str = Field(description="The modified plan after making changes requested by the user.")
 
 llm_modify = llm_sonnet
-llm_format = llm_haiku.bind_tools([ModifiedPlan])
+llm_format = llm_haiku.bind_tools([ModifiedPlan], tool_choice='ModifiedPlan')
 
 
 MODIFY_SYSTEM_PROMPT = '''
@@ -46,7 +47,7 @@ def modify_existing_plan(task, nearest_task, nearest_plan, langchain_config):
         ("user", "{plan}"), 
     ])
 
-    modify_chain = modify_prompt | llm_modify | format_prompt | llm_format
+    modify_chain = modify_prompt | llm_modify | StrOutputParser() | format_prompt | llm_format
 
     result = modify_chain.invoke({'existing_plan':nearest_plan, 'original_task': nearest_task, 'updates':task}, config=langchain_config)
 

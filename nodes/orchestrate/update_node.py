@@ -16,7 +16,7 @@ class UpdatedPlan(BaseModel):
     """Use this tool to describe the plan created to solve a user's task.  You must always use this tool to describe the plan."""
     plan: str = Field(description="The updated plan after making any updates necessary to ensure the correct attributes are passed to each of the pybasell functions.")
 
-llm_update = llm_opus.bind_tools([UpdatedPlan])
+llm_update = llm_opus.bind_tools([UpdatedPlan], tool_choice='UpdatedPlan')
 
 #   update
 UPDATE_SYSTEM_PROMPT = '''
